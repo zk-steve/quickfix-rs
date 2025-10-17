@@ -148,6 +148,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "quickfix-msgkrx"
+version = "0.2.0"
+dependencies = [
+ "quickfix",
+ "quickfix-msg-gen",
+]
+
+[[package]]
 name = "quickfix-spec-parser"
 version = "0.2.0"
 dependencies = [
