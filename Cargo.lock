@@ -140,19 +140,19 @@ dependencies = [
 ]
 
 [[package]]
-name = "quickfix-native"
-version = "0.1.0"
-dependencies = [
- "quickfix-spec-parser",
- "thiserror",
-]
-
-[[package]]
 name = "quickfix-msgkrx"
 version = "0.2.0"
 dependencies = [
  "quickfix",
  "quickfix-msg-gen",
+]
+
+[[package]]
+name = "quickfix-native"
+version = "0.1.0"
+dependencies = [
+ "quickfix-spec-parser",
+ "thiserror",
 ]
 
 [[package]]
