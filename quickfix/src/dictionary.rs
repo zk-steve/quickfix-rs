@@ -14,6 +14,8 @@ use crate::{
 
 /// For storage and retrieval of key/value pairs.
 pub struct Dictionary(pub(crate) FixDictionary_t);
+unsafe impl Send for Dictionary {}
+unsafe impl Sync for Dictionary {}
 
 impl Dictionary {
     /// Create a new empty struct.

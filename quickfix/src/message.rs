@@ -19,6 +19,9 @@ use crate::{
 /// Base class for all FIX messages.
 pub struct Message(pub(crate) FixMessage_t);
 
+unsafe impl Send for Message {}
+unsafe impl Sync for Message {}
+
 impl Message {
     /// Create new empty struct.
     pub fn new() -> Self {

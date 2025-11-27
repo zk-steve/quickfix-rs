@@ -11,6 +11,9 @@ use crate::{utils::read_checked_cstr, QuickFixError};
 /// Unique session id consists of BeginString, SenderCompID and TargetCompID.
 pub struct SessionId(pub(crate) FixSessionID_t);
 
+unsafe impl Send for SessionId {}
+unsafe impl Sync for SessionId {}
+
 impl SessionId {
     /// Try create new struct from all its inner components.
     ///

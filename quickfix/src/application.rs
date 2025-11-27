@@ -125,6 +125,9 @@ pub trait ApplicationCallback {
 #[derive(Debug)]
 pub struct Application<'a, C: ApplicationCallback>(pub(crate) FixApplication_t, PhantomData<&'a C>);
 
+unsafe impl<'a, C: ApplicationCallback> Send for Application<'a, C> {}
+unsafe impl<'a, C: ApplicationCallback> Sync for Application<'a, C> {}
+
 impl<'a, C> Application<'a, C>
 where
     C: ApplicationCallback + 'static,

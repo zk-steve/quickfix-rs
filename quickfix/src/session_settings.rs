@@ -11,6 +11,9 @@ use crate::{utils::ffi_code_to_result, Dictionary, QuickFixError, SessionId};
 /// Container for setting dictionaries mapped to sessions.
 pub struct SessionSettings(pub(crate) FixSessionSettings_t);
 
+unsafe impl Send for SessionSettings {}
+unsafe impl Sync for SessionSettings {}
+
 impl SessionSettings {
     /// Create new empty struct.
     pub fn new() -> Self {
