@@ -55,7 +55,9 @@ pub struct FixSessionID_t(NonNull<ffi::c_void>);
 pub struct FixMessage_t(NonNull<ffi::c_void>);
 
 unsafe impl Send for FixSession_t {}
+unsafe impl Sync for FixSession_t {}
 unsafe impl Send for FixMessage_t {}
+unsafe impl Sync for FixMessage_t {}
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[repr(transparent)]
