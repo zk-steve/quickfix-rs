@@ -22,7 +22,7 @@ impl Header {
         Self::default()
     }
 
-    fn get_field_str(&self, tag: i32) -> Option<&str> {
+    pub fn get_field_str(&self, tag: i32) -> Option<&str> {
         unsafe { FixHeader_getField(self.0, tag).map(|pr| CStr::from_ptr(pr.as_ptr()).to_str().unwrap()) }
     }
 }
