@@ -111,6 +111,14 @@ impl Message {
         f(&obj)
     }
 
+    /// Get struct header part.
+    pub fn get_header(&self) -> ManuallyDrop<Header>
+    {
+        let ptr =
+            unsafe { FixMessage_getHeaderRef(self.0) }.expect("Fail to get ptr on message header");
+        ManuallyDrop::new(Header(ptr))
+    }
+
     /// Read or write struct header part.
     ///
     /// # Panic
@@ -123,7 +131,6 @@ impl Message {
     {
         let ptr =
             unsafe { FixMessage_getHeaderRef(self.0) }.expect("Fail to get ptr on message header");
-
         let mut obj = ManuallyDrop::new(Header(ptr));
         f(&mut obj)
     }
