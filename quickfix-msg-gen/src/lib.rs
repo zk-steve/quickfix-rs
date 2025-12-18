@@ -179,7 +179,6 @@ fn generate_field_type_int_values_const(output: &mut String, field_spec: &FieldS
         output.push_str(&format!("pub const {enum_name}_{}\n: i32 = {};", value.description.to_case(Case::Constant), value.value));
     }
     output.push_str("\n\n");
-    generate_field_type_values(output, field_spec);
 }
 
 fn generate_field_type_char_values(output: &mut String, field_spec: &FieldSpec) {
@@ -210,7 +209,6 @@ fn generate_field_type_char_values_const(output: &mut String, field_spec: &Field
         output.push_str(&format!("pub const {enum_name}_{}\n: &str = \"{}\";", value.description.to_case(Case::Constant), value.value));
     }
     output.push_str("\n\n");
-    generate_field_type_values(output, field_spec);
 }
 
 fn generate_field_type_values(output: &mut String, field_spec: &FieldSpec) {
