@@ -11,7 +11,7 @@ fn main() -> io::Result<()> {
     generate(SPEC_FILENAME, format!("{out_dir}/code.rs"), BEGIN_STRING)?;
 
     // Uncomment bellow line to show generated code
-    generate(SPEC_FILENAME, "src/out.rs", BEGIN_STRING)?;
+    // generate(SPEC_FILENAME, "src/out.rs", BEGIN_STRING)?;
 
     Ok(())
 }
