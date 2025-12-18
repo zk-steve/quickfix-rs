@@ -186,6 +186,18 @@ fn generate_field_type_char_values(output: &mut String, field_spec: &FieldSpec) 
     }
     output.push_str("}\n\n");
 
+    generate_field_type_char_values_const(output, field_spec);
+    generate_field_type_values(output, field_spec);
+}
+fn generate_field_type_char_values_const(output: &mut String, field_spec: &FieldSpec) {
+    assert!(!field_spec.values.is_empty());
+
+    let enum_name = field_spec.name.as_str().to_case(Case::Constant);
+    // Generate enum possible values.
+    for value in &field_spec.values {
+        output.push_str(&format!("pub const {enum_name}_{}\n: &str = \"{}\";", value.description.to_case(Case::Constant), value.value));
+    }
+    output.push_str("\n");
     generate_field_type_values(output, field_spec);
 }
 
