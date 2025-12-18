@@ -1,5 +1,5 @@
 use std::{ffi::CString, fmt, mem::ManuallyDrop};
-
+use std::ffi::CStr;
 use quickfix_ffi::{
     FixMessage_addGroup, FixMessage_copy, FixMessage_copyGroup, FixMessage_copyHeader,
     FixMessage_copyTrailer, FixMessage_delete, FixMessage_fromString, FixMessage_getField,
@@ -204,6 +204,10 @@ impl Message {
         } else {
             None
         }
+    }
+
+    pub fn get_field_str(&self, tag: i32) -> Option<&str> {
+        unsafe { FixMessage_getField(self.0, tag).map(|pr| CStr::from_ptr(pr.as_ptr()).to_str().unwrap()) }
     }
 }
 
