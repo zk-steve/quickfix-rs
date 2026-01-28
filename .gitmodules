@@ -1,4 +1,4 @@
 [submodule "quickfix-ffi/libquickfix"]
 	path = quickfix-ffi/libquickfix
-	url = https://github.com/zqw86713/quickfix.git
+	url = https://github.com/zk-steve/quickfix
 	branch = qinweiz
