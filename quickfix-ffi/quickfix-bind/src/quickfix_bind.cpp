@@ -1,8 +1,6 @@
 #include "quickfix_bind.h"
 
 #include <exception>
-#include <mutex>
-#include <unordered_map>
 
 #include <quickfix/Application.h>
 #include <quickfix/DataDictionary.h>
@@ -192,8 +190,6 @@ namespace FIX {
 
 static thread_local char *lastError = nullptr;
 static thread_local int8_t lastErrorCode = 0;
-static std::mutex messageFixStringMutex;
-static std::unordered_map<const Message *, std::string> messageFixStringCache;
 
 static void Fix_setLastError(std::exception &ex, int8_t code) {
   // Release previously set error if any
@@ -841,12 +837,7 @@ int8_t FixMessage_addGroup(Message *obj, const Group *group) {
 
 const char *FixMessage_toString(FixMessage_t *obj) {
   RETURN_VAL_IF_NULL(obj, NULL);
-  CATCH_OR_RETURN_NULL({
-    std::lock_guard<std::mutex> lock(messageFixStringMutex);
-    auto &cached = messageFixStringCache[obj];
-    obj->toString(cached);
-    return cached.c_str();
-  });
+  CATCH_OR_RETURN_NULL({ return obj->toStringFrozen().c_str(); });
 }
 
 int64_t FixMessage_getStringLen(const FixMessage_t *obj) {
@@ -874,12 +865,6 @@ int8_t FixMessage_readString(const FixMessage_t *obj, char *buffer, uint64_t buf
 
 void FixMessage_delete(const Message *obj) {
   RETURN_IF_NULL(obj);
-
-  {
-    std::lock_guard<std::mutex> lock(messageFixStringMutex);
-    messageFixStringCache.erase(obj);
-  }
-
   delete obj;
 }
 
