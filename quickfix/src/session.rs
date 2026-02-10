@@ -17,6 +17,14 @@ pub fn send_to_target(msg: Message, session_id: &SessionId) -> Result<(), QuickF
     ffi_code_to_result(unsafe { FixSession_sendToTarget(msg.0, session_id.0) })
 }
 
+/// Send message to target design in session ID without consuming the message.
+pub fn send_to_target_by_ref_mut(
+    msg: &mut Message,
+    session_id: &SessionId,
+) -> Result<(), QuickFixError> {
+    ffi_code_to_result(unsafe { FixSession_sendToTarget(msg.0, session_id.0) })
+}
+
 /// FIX Session.
 pub struct Session<'a> {
     pub(crate) inner: FixSession_t,

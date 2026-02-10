@@ -83,8 +83,8 @@ where
     assert_eq!(sender.user_msg_count(), MsgCounter::default());
     assert_eq!(receiver.user_msg_count(), MsgCounter::default());
 
-    let news = build_news("Hello", &[])?;
-    send_to_target(news, &ServerType::Sender.session_id())?;
+    let mut news = build_news("Hello", &[])?;
+    send_to_target_by_ref_mut(&mut news, &ServerType::Sender.session_id())?;
     thread::sleep(Duration::from_millis(50));
 
     assert_eq!(sender.user_msg_count(), MsgCounter { sent: 1, recv: 0 });
