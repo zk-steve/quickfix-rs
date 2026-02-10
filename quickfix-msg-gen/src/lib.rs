@@ -448,6 +448,14 @@ fn generate_message(output: &mut String, message: &MessageSpec) {
                         .to_fix_string()
                         .expect("Fail to format {struct_name} message as FIX string")
                 }}
+
+                /// Alias for [`Self::to_fix_string`].
+                #[inline(never)]
+                pub fn to_fix_str(&mut self) -> &str {{
+                    self.inner
+                        .to_fix_str()
+                        .expect("Fail to format {struct_name} message as FIX string")
+                }}
             }}
 
             impl From<{struct_name}> for quickfix::Message {{

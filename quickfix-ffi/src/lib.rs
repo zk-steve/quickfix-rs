@@ -362,6 +362,8 @@ extern "C" {
     #[must_use]
     pub fn FixMessage_addGroup(obj: FixMessage_t, group: FixGroup_t) -> i8;
 
+    pub fn FixMessage_toString(obj: FixMessage_t) -> NullableCStr;
+
     pub fn FixMessage_getStringLen(obj: FixMessage_t) -> i64;
 
     #[must_use]

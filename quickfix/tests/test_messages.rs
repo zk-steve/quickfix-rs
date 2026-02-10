@@ -2,11 +2,13 @@ use quickfix::*;
 
 #[test]
 fn test_read_empy_message() {
-    let msg = Message::new();
+    let mut msg = Message::new();
     assert_eq!(msg.to_fix_string().as_deref(), Ok("9=0\u{1}10=167\u{1}"));
+    assert_eq!(msg.to_fix_str(), Ok("9=0\u{1}10=167\u{1}"));
 
-    let msg = Message::try_from_text("9=0\u{1}10=000\u{1}").unwrap();
+    let mut msg = Message::try_from_text("9=0\u{1}10=000\u{1}").unwrap();
     assert_eq!(msg.to_fix_string().as_deref(), Ok("9=0\u{1}10=167\u{1}"));
+    assert_eq!(msg.to_fix_str(), Ok("9=0\u{1}10=167\u{1}"));
 }
 
 #[test]

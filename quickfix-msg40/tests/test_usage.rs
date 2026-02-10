@@ -19,6 +19,8 @@ fn test_build_order_status_request() -> Result<(), QuickFixError> {
          11=foo\u{1}54=1\u{1}55=AAPL US Equity\u{1}\
          10=213\u{1}"
     );
+    let fix_str = obj.to_fix_string();
+    assert_eq!(obj.to_fix_str(), fix_str);
 
     // Check headers / trailers getters.
     assert_eq!(obj.header().get_msg_type(), MsgType::OrderStatusRequest);

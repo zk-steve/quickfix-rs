@@ -1,12 +1,12 @@
-use std::{ffi::CString, fmt, mem::ManuallyDrop};
-use std::ffi::CStr;
 use quickfix_ffi::{
     FixMessage_addGroup, FixMessage_copy, FixMessage_copyGroup, FixMessage_copyHeader,
     FixMessage_copyTrailer, FixMessage_delete, FixMessage_fromString, FixMessage_getField,
     FixMessage_getGroupRef, FixMessage_getHeaderRef, FixMessage_getStringLen,
     FixMessage_getTrailerRef, FixMessage_new, FixMessage_readString, FixMessage_removeField,
-    FixMessage_setField, FixMessage_t,
+    FixMessage_setField, FixMessage_t, FixMessage_toString,
 };
+use std::ffi::CStr;
+use std::{ffi::CString, fmt, mem::ManuallyDrop};
 
 use crate::{
     group::Group,
@@ -83,6 +83,18 @@ impl Message {
         }
     }
 
+    /// Borrow message as FIX text without Rust-side allocation.
+    ///
+    /// NOTE: this borrows an internal C++ buffer and therefore requires `&mut self`.
+    /// Keep the returned string for short-lived use and avoid storing it.
+    pub fn to_fix_str(&mut self) -> Result<&str, QuickFixError> {
+        let ptr =
+            unsafe { FixMessage_toString(self.0) }.ok_or_else(QuickFixError::from_last_error)?;
+        unsafe { CStr::from_ptr(ptr.as_ptr()) }
+            .to_str()
+            .map_err(|err| QuickFixError::invalid_argument(err.to_string()))
+    }
+
     /// Clone struct header part.
     ///
     /// # Panic
@@ -112,8 +124,7 @@ impl Message {
     }
 
     /// Get struct header part.
-    pub fn get_header(&self) -> ManuallyDrop<Header>
-    {
+    pub fn get_header(&self) -> ManuallyDrop<Header> {
         let ptr =
             unsafe { FixMessage_getHeaderRef(self.0) }.expect("Fail to get ptr on message header");
         ManuallyDrop::new(Header(ptr))
@@ -207,7 +218,9 @@ impl Message {
     }
 
     pub fn get_field_str(&self, tag: i32) -> Option<&str> {
-        unsafe { FixMessage_getField(self.0, tag).map(|pr| CStr::from_ptr(pr.as_ptr()).to_str().unwrap()) }
+        unsafe {
+            FixMessage_getField(self.0, tag).map(|pr| CStr::from_ptr(pr.as_ptr()).to_str().unwrap())
+        }
     }
 }
 
