@@ -96,6 +96,9 @@ impl Session<'_> {
     }
 }
 
+unsafe impl Send for Session<'static> {}
+unsafe impl Sync for Session<'static> {}
+
 impl fmt::Debug for Session<'_> {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         f.debug_tuple("Session").finish()
