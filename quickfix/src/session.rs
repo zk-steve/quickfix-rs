@@ -68,6 +68,11 @@ impl Session<'_> {
         ffi_code_to_bool(unsafe { FixSession_send(self.inner, msg.0) })
     }
 
+    /// Send message using current session.
+    pub fn send_by_ref_mut(&mut self, msg: &mut Message) -> Result<bool, QuickFixError> {
+        ffi_code_to_bool(unsafe { FixSession_send(self.inner, msg.0) })
+    }
+
     /// Reset session by sending a logout & disconnecting, but still keeping the session enabled,
     /// so that logon is retried.
     pub fn reset(&mut self) -> Result<(), QuickFixError> {
