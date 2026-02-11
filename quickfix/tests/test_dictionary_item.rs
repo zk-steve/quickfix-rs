@@ -34,6 +34,7 @@ fn test_build() {
         &DataDictionary("foo/FIX50.xml"),
         &TransportDataDictionary("bar/FIXT11.xml"),
         &FileStorePath("my_store"),
+        &FileStoreSync(false),
         &CheckCompID(true),
         &CheckLatency(false),
         &MaxLatency(-20),
@@ -115,6 +116,7 @@ fn test_build() {
         dict.get::<String>("FileStorePath").as_deref(),
         Ok("my_store")
     );
+    assert_eq!(dict.get("FileStoreSync"), Ok(false));
     assert_eq!(dict.get::<String>("foo").as_deref(), Ok("bar"));
 
     assert_eq!(dict.get("CheckCompID"), Ok(true));

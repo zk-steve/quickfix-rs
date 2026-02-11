@@ -181,6 +181,13 @@ impl_dictionary_item!(TransportDataDictionary as String);
 pub struct FileStorePath<'a>(pub &'a str);
 impl_dictionary_item!(FileStorePath as String);
 
+/// Flush file store writes synchronously.
+///
+/// `true` keeps the existing synchronous behavior.
+/// `false` enables buffered/asynchronous writes.
+pub struct FileStoreSync(pub bool);
+impl_dictionary_item!(FileStoreSync);
+
 /// Validate message comp ID.
 pub struct CheckCompID(pub bool);
 impl_dictionary_item!(CheckCompID);
