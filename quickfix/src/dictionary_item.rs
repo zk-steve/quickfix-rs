@@ -248,6 +248,10 @@ impl_dictionary_item!(HttpAcceptPort as i32);
 pub struct PersistMessages(pub bool);
 impl_dictionary_item!(PersistMessages);
 
+/// Persist incoming FIX messages.
+pub struct PersistIncomingMessages(pub bool);
+impl_dictionary_item!(PersistIncomingMessages);
+
 /// Reset sequence number as soon as session is initialized.
 pub struct SendResetSeqNumFlag(pub bool);
 impl_dictionary_item!(SendResetSeqNumFlag);

@@ -50,6 +50,7 @@ fn test_build() {
         &RefreshOnLogon(true),
         &HttpAcceptPort(9090),
         &PersistMessages(false),
+        &PersistIncomingMessages(true),
         &("foo", "bar"),
     ])
     .unwrap();
@@ -138,4 +139,5 @@ fn test_build() {
     assert_eq!(dict.get("HttpAcceptPort"), Ok(9090));
 
     assert_eq!(dict.get("PersistMessages"), Ok(false));
+    assert_eq!(dict.get("PersistIncomingMessages"), Ok(true));
 }
