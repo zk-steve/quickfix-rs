@@ -82,7 +82,7 @@ impl ApplicationCallback for FixRecorder {
 
     fn on_msg_from_admin(
         &self,
-        _msg: &Message,
+        _msg: Message,
         session_id: &SessionId,
     ) -> Result<(), MsgFromAdminError> {
         self.recv_admin.fetch_add(1, Ordering::Relaxed);
@@ -92,7 +92,7 @@ impl ApplicationCallback for FixRecorder {
 
     fn on_msg_from_app(
         &self,
-        _msg: &Message,
+        _msg: Message,
         session_id: &SessionId,
     ) -> Result<(), MsgFromAppError> {
         self.recv_user.fetch_add(1, Ordering::Relaxed);

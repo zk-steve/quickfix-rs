@@ -1,6 +1,7 @@
 #include "quickfix_bind.h"
 
 #include <exception>
+#include <utility>
 
 #include <quickfix/Application.h>
 #include <quickfix/DataDictionary.h>
@@ -264,11 +265,12 @@ public:
       throw DoNotSend();
   }
 
-  void fromAdmin(const Message &msg, const SessionID &session)
+  void fromAdmin(Message &&msg, const SessionID &session)
       EXCEPT(FieldNotFound, IncorrectDataFormat, IncorrectTagValue, RejectLogon) override {
     RETURN_IF_NULL(callbacks);
     RETURN_IF_NULL(callbacks->fromAdmin);
-    int8_t result = callbacks->fromAdmin(data, &msg, &session);
+    Message *ownedMessage = new Message(std::move(msg));
+    int8_t result = callbacks->fromAdmin(data, ownedMessage, &session);
 
     switch (result) {
     case CALLBACK_RESULT_FIELD_NOT_FOUND:
@@ -282,11 +284,12 @@ public:
     }
   }
 
-  void fromApp(const Message &msg, const SessionID &session)
+  void fromApp(Message &&msg, const SessionID &session)
       EXCEPT(FieldNotFound, IncorrectDataFormat, IncorrectTagValue, UnsupportedMessageType) override {
     RETURN_IF_NULL(callbacks);
     RETURN_IF_NULL(callbacks->fromApp);
-    int8_t result = callbacks->fromApp(data, &msg, &session);
+    Message *ownedMessage = new Message(std::move(msg));
+    int8_t result = callbacks->fromApp(data, ownedMessage, &session);
 
     switch (result) {
     case CALLBACK_RESULT_FIELD_NOT_FOUND:
@@ -295,8 +298,8 @@ public:
       throw IncorrectDataFormat();
     case CALLBACK_RESULT_INCORRECT_TAG_VALUE:
       throw IncorrectTagValue();
-    case CALLBACK_RESULT_REJECT_LOGON:
-      throw RejectLogon();
+    case CALLBACK_RESULT_UNSUPPORTED_MESSAGE_TYPE:
+      throw UnsupportedMessageType();
     }
   }
 };

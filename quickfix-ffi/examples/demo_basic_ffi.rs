@@ -42,6 +42,7 @@ extern "C" fn custom_from_admin(
     session: FixSessionID_t,
 ) -> i8 {
     println!("custom_from_admin: {data:?} {msg:?} {session:?}");
+    unsafe { FixMessage_delete(msg) };
     CALLBACK_OK
 }
 
@@ -51,6 +52,7 @@ extern "C" fn custom_from_app(
     session: FixSessionID_t,
 ) -> i8 {
     println!("custom_from_app: {data:?} {msg:?} {session:?}");
+    unsafe { FixMessage_delete(msg) };
     CALLBACK_OK
 }
 

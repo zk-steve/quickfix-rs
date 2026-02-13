@@ -76,8 +76,16 @@ typedef struct ApplicationCallbacks {
   void (*onLogout)(const void *data, const FixSessionID_t *session);
   void (*toAdmin)(const void *data, FixMessage_t *msg, const FixSessionID_t *session);
   int8_t (*toApp)(const void *data, FixMessage_t *msg, const FixSessionID_t *session);
-  int8_t (*fromAdmin)(const void *data, const FixMessage_t *msg, const FixSessionID_t *session);
-  int8_t (*fromApp)(const void *data, const FixMessage_t *msg, const FixSessionID_t *session);
+  /**
+   * Receives ownership of `msg`. Callback implementation must eventually free it
+   * via `FixMessage_delete`.
+   */
+  int8_t (*fromAdmin)(const void *data, FixMessage_t *msg, const FixSessionID_t *session);
+  /**
+   * Receives ownership of `msg`. Callback implementation must eventually free it
+   * via `FixMessage_delete`.
+   */
+  int8_t (*fromApp)(const void *data, FixMessage_t *msg, const FixSessionID_t *session);
 } FixApplicationCallbacks_t;
 
 typedef struct LogCallbacks {

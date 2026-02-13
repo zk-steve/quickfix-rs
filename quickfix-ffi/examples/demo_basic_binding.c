@@ -26,13 +26,15 @@ static int8_t customToApp(const void *data, FixMessage_t *msg, const FixSessionI
   return CALLBACK_OK;
 }
 
-static int8_t customFromAdmin(const void *data, const FixMessage_t *msg, const FixSessionID_t *session) {
+static int8_t customFromAdmin(const void *data, FixMessage_t *msg, const FixSessionID_t *session) {
   printf("customFromAdmin: %p %p %p\n", data, msg, session);
+  FixMessage_delete(msg);
   return CALLBACK_OK;
 }
 
-static int8_t customFromApp(const void *data, const FixMessage_t *msg, const FixSessionID_t *session) {
+static int8_t customFromApp(const void *data, FixMessage_t *msg, const FixSessionID_t *session) {
   printf("customFromApp: %p %p %p\n", data, msg, session);
+  FixMessage_delete(msg);
   return CALLBACK_OK;
 }
 

@@ -59,17 +59,17 @@ impl ApplicationCallback for MyApplication {
 
     fn on_msg_from_admin(
         &self,
-        msg: &Message,
+        msg: Message,
         session: &SessionId,
     ) -> Result<(), MsgFromAdminError> {
         self.inc_message_index();
-        self.print_callback("from_admin", session, Some(msg));
+        self.print_callback("from_admin", session, Some(&msg));
         Ok(())
     }
 
-    fn on_msg_from_app(&self, msg: &Message, session: &SessionId) -> Result<(), MsgFromAppError> {
+    fn on_msg_from_app(&self, msg: Message, session: &SessionId) -> Result<(), MsgFromAppError> {
         self.inc_message_index();
-        self.print_callback("from_app", session, Some(msg));
+        self.print_callback("from_app", session, Some(&msg));
         Ok(())
     }
 }

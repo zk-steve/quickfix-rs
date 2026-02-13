@@ -107,16 +107,20 @@ pub trait ApplicationCallback {
     }
 
     /// Called after received a message from admin level.
+    ///
+    /// Callback receives ownership of the message.
     fn on_msg_from_admin(
         &self,
-        msg: &Message,
+        msg: Message,
         session: &SessionId,
     ) -> Result<(), MsgFromAdminError> {
         Ok(())
     }
 
     /// Called after received a message from application level.
-    fn on_msg_from_app(&self, msg: &Message, session: &SessionId) -> Result<(), MsgFromAppError> {
+    ///
+    /// Callback receives ownership of the message.
+    fn on_msg_from_app(&self, msg: Message, session: &SessionId) -> Result<(), MsgFromAppError> {
         Ok(())
     }
 }
@@ -213,12 +217,11 @@ where
         msg: FixMessage_t,
         session: FixSessionID_t,
     ) -> i8 {
-        let msg = ManuallyDrop::new(Message(msg));
         let session_id = ManuallyDrop::new(SessionId(session));
 
-        let output_code = catch_unwind(|| {
+        let output_code = catch_unwind(move || {
             let this = unsafe { &*(data as *const C) };
-            this.on_msg_from_admin(&msg, &session_id)
+            this.on_msg_from_admin(Message(msg), &session_id)
         });
 
         callback_to_code(output_code)
@@ -229,12 +232,11 @@ where
         msg: FixMessage_t,
         session: FixSessionID_t,
     ) -> i8 {
-        let msg = ManuallyDrop::new(Message(msg));
         let session_id = ManuallyDrop::new(SessionId(session));
 
-        let output_code = catch_unwind(|| {
+        let output_code = catch_unwind(move || {
             let this = unsafe { &*(data as *const C) };
-            this.on_msg_from_app(&msg, &session_id)
+            this.on_msg_from_app(Message(msg), &session_id)
         });
 
         callback_to_code(output_code)
