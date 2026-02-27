@@ -12,7 +12,6 @@ members = [
     "quickfix-msg43",
     "quickfix-msg44",
     "quickfix-msg50",
-    "quickfix-native",
     "quickfix-msg50",
     "quickfix-msgkrx",
 ]
