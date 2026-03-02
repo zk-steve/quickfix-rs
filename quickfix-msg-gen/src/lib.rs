@@ -176,7 +176,11 @@ fn generate_field_type_int_values_const(output: &mut String, field_spec: &FieldS
     let enum_name = field_spec.name.as_str().to_case(Case::Constant);
     // Generate enum possible values.
     for value in &field_spec.values {
-        output.push_str(&format!("pub const {enum_name}_{}\n: i32 = {};", value.description.to_case(Case::Constant), value.value));
+        output.push_str(&format!(
+            "pub const {enum_name}_{}\n: i32 = {};",
+            value.description.to_case(Case::Constant),
+            value.value
+        ));
     }
     output.push_str("\n\n");
 }
@@ -206,7 +210,11 @@ fn generate_field_type_char_values_const(output: &mut String, field_spec: &Field
     let enum_name = field_spec.name.as_str().to_case(Case::Constant);
     // Generate enum possible values.
     for value in &field_spec.values {
-        output.push_str(&format!("pub const {enum_name}_{}\n: &str = \"{}\";", value.description.to_case(Case::Constant), value.value));
+        output.push_str(&format!(
+            "pub const {enum_name}_{}\n: &str = \"{}\";",
+            value.description.to_case(Case::Constant),
+            value.value
+        ));
     }
     output.push_str("\n\n");
 }

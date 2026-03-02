@@ -1,7 +1,5 @@
+use std::ffi::CStr;
 use std::fmt;
-use std::{
-    ffi::{CStr},
-};
 
 use quickfix_ffi::{
     FixHeader_addGroup, FixHeader_copy, FixHeader_copyGroup, FixHeader_delete, FixHeader_getField,
@@ -23,7 +21,9 @@ impl Header {
     }
 
     pub fn get_field_str(&self, tag: i32) -> Option<&str> {
-        unsafe { FixHeader_getField(self.0, tag).map(|pr| CStr::from_ptr(pr.as_ptr()).to_str().unwrap()) }
+        unsafe {
+            FixHeader_getField(self.0, tag).map(|pr| CStr::from_ptr(pr.as_ptr()).to_str().unwrap())
+        }
     }
 }
 

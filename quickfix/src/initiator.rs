@@ -32,14 +32,16 @@ where
     A: ApplicationCallback,
     S: FfiMessageStoreFactory,
     L: LogCallback,
-{}
+{
+}
 
 unsafe impl<'a, A, L, S> Sync for Initiator<'a, A, L, S>
 where
     A: ApplicationCallback,
     S: FfiMessageStoreFactory,
     L: LogCallback,
-{}
+{
+}
 
 impl<'a, A, L, S> Initiator<'a, A, L, S>
 where
