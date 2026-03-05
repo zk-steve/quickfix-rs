@@ -117,6 +117,15 @@ extern "C" {
 
     pub fn Fix_clearLastErrorMessage();
 
+    pub fn FixBenchmark_noop() -> i8;
+
+    pub fn FixBenchmark_strEqual(
+        lhs: *const ffi::c_char,
+        lhs_len: u64,
+        rhs: *const ffi::c_char,
+        rhs_len: u64,
+    ) -> i8;
+
     // Session settings
 
     pub fn FixSessionSettings_new() -> Option<FixSessionSettings_t>;
@@ -357,6 +366,14 @@ extern "C" {
     pub fn FixMessage_getField(obj: FixMessage_t, tag: i32) -> NullableCStr;
 
     #[must_use]
+    pub fn FixMessage_isFieldEqual(
+        obj: FixMessage_t,
+        tag: i32,
+        value: *const ffi::c_char,
+        value_len: u64,
+    ) -> i8;
+
+    #[must_use]
     pub fn FixMessage_removeField(obj: FixMessage_t, tag: i32) -> i8;
 
     #[must_use]
@@ -388,6 +405,14 @@ extern "C" {
     pub fn FixHeader_getField(obj: FixHeader_t, tag: i32) -> NullableCStr;
 
     #[must_use]
+    pub fn FixHeader_isFieldEqual(
+        obj: FixHeader_t,
+        tag: i32,
+        value: *const ffi::c_char,
+        value_len: u64,
+    ) -> i8;
+
+    #[must_use]
     pub fn FixHeader_setField(obj: FixHeader_t, tag: i32, value: *const ffi::c_char) -> i8;
 
     #[must_use]
@@ -409,6 +434,14 @@ extern "C" {
     pub fn FixMessage_getTrailerRef(obj: FixMessage_t) -> Option<FixTrailer_t>;
 
     pub fn FixTrailer_getField(obj: FixTrailer_t, tag: i32) -> NullableCStr;
+
+    #[must_use]
+    pub fn FixTrailer_isFieldEqual(
+        obj: FixTrailer_t,
+        tag: i32,
+        value: *const ffi::c_char,
+        value_len: u64,
+    ) -> i8;
 
     #[must_use]
     pub fn FixTrailer_setField(obj: FixTrailer_t, tag: i32, value: *const ffi::c_char) -> i8;
@@ -442,6 +475,14 @@ extern "C" {
     pub fn FixGroup_getDelim(obj: FixGroup_t) -> i32;
 
     pub fn FixGroup_getField(obj: FixGroup_t, tag: i32) -> NullableCStr;
+
+    #[must_use]
+    pub fn FixGroup_isFieldEqual(
+        obj: FixGroup_t,
+        tag: i32,
+        value: *const ffi::c_char,
+        value_len: u64,
+    ) -> i8;
 
     #[must_use]
     pub fn FixGroup_setField(obj: FixGroup_t, tag: i32, value: *const ffi::c_char) -> i8;

@@ -2,8 +2,8 @@ use quickfix_ffi::{
     FixMessage_addGroup, FixMessage_copy, FixMessage_copyGroup, FixMessage_copyHeader,
     FixMessage_copyTrailer, FixMessage_delete, FixMessage_fromString, FixMessage_getField,
     FixMessage_getGroupRef, FixMessage_getHeaderRef, FixMessage_getStringLen,
-    FixMessage_getTrailerRef, FixMessage_new, FixMessage_readString, FixMessage_removeField,
-    FixMessage_setField, FixMessage_t, FixMessage_toString,
+    FixMessage_getTrailerRef, FixMessage_isFieldEqual, FixMessage_new, FixMessage_readString,
+    FixMessage_removeField, FixMessage_setField, FixMessage_t, FixMessage_toString,
 };
 use std::ffi::CStr;
 use std::{ffi::CString, fmt, mem::ManuallyDrop};
@@ -227,6 +227,12 @@ impl Message {
 impl FieldMap for Message {
     fn get_field(&self, tag: i32) -> Option<String> {
         unsafe { FixMessage_getField(self.0, tag) }.map(read_checked_cstr)
+    }
+
+    fn is_field_equal(&self, tag: i32, value: &str) -> bool {
+        unsafe {
+            FixMessage_isFieldEqual(self.0, tag, value.as_ptr().cast(), value.len() as u64) == 1
+        }
     }
 
     fn set_field<V: IntoFixValue>(&mut self, tag: i32, value: V) -> Result<(), QuickFixError> {

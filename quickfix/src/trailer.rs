@@ -2,7 +2,8 @@ use std::fmt;
 
 use quickfix_ffi::{
     FixTrailer_addGroup, FixTrailer_copy, FixTrailer_copyGroup, FixTrailer_delete,
-    FixTrailer_getField, FixTrailer_new, FixTrailer_removeField, FixTrailer_setField, FixTrailer_t,
+    FixTrailer_getField, FixTrailer_isFieldEqual, FixTrailer_new, FixTrailer_removeField,
+    FixTrailer_setField, FixTrailer_t,
 };
 
 use crate::{
@@ -23,6 +24,12 @@ impl Trailer {
 impl FieldMap for Trailer {
     fn get_field(&self, tag: i32) -> Option<String> {
         unsafe { FixTrailer_getField(self.0, tag) }.map(read_checked_cstr)
+    }
+
+    fn is_field_equal(&self, tag: i32, value: &str) -> bool {
+        unsafe {
+            FixTrailer_isFieldEqual(self.0, tag, value.as_ptr().cast(), value.len() as u64) == 1
+        }
     }
 
     fn set_field<V: IntoFixValue>(&mut self, tag: i32, value: V) -> Result<(), QuickFixError> {

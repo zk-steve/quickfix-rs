@@ -1,6 +1,8 @@
 #include "quickfix_bind.h"
 
+#include <cstring>
 #include <exception>
+#include <limits>
 #include <utility>
 
 #include <quickfix/Application.h>
@@ -217,6 +219,34 @@ void Fix_clearLastErrorMessage() {
     delete[] lastError;
     lastError = nullptr;
   }
+}
+
+int8_t FixBenchmark_noop() { return 1; }
+
+int8_t FixBenchmark_strEqual(const char *lhs, uint64_t lhs_len, const char *rhs, uint64_t rhs_len) {
+  RETURN_VAL_IF_NULL(lhs, 0);
+  RETURN_VAL_IF_NULL(rhs, 0);
+
+  if (lhs_len != rhs_len) {
+    return 0;
+  }
+
+  if (lhs_len == 0) {
+    return 1;
+  }
+
+  return std::memcmp(lhs, rhs, static_cast<size_t>(lhs_len)) == 0;
+}
+
+static int8_t FixFieldMap_isFieldEqual(const FieldMap *obj, int32_t tag, const char *value, uint64_t value_len) {
+  RETURN_VAL_IF_NULL(obj, 0);
+  RETURN_VAL_IF_NULL(value, 0);
+
+  if (value_len > static_cast<uint64_t>((std::numeric_limits<size_t>::max)())) {
+    return 0;
+  }
+
+  return obj->isFieldEqual(tag, value, static_cast<size_t>(value_len)) ? 1 : 0;
 }
 
 class ApplicationBind : public Application {
@@ -812,6 +842,10 @@ const char *FixMessage_getField(const Message *obj, int32_t tag) {
   CATCH_OR_RETURN_NULL({ return obj->getField(tag).c_str(); });
 }
 
+int8_t FixMessage_isFieldEqual(const Message *obj, int32_t tag, const char *value, uint64_t value_len) {
+  return FixFieldMap_isFieldEqual(obj, tag, value, value_len);
+}
+
 int8_t FixMessage_setField(Message *obj, int32_t tag, const char *value) {
   RETURN_VAL_IF_NULL(obj, ERRNO_INVAL);
   RETURN_VAL_IF_NULL(value, ERRNO_INVAL);
@@ -895,6 +929,10 @@ const char *FixHeader_getField(const Header *obj, int32_t tag) {
   CATCH_OR_RETURN_NULL({ return obj->getField(tag).c_str(); });
 }
 
+int8_t FixHeader_isFieldEqual(const Header *obj, int32_t tag, const char *value, uint64_t value_len) {
+  return FixFieldMap_isFieldEqual(obj, tag, value, value_len);
+}
+
 int8_t FixHeader_setField(Header *obj, int32_t tag, const char *value) {
   RETURN_VAL_IF_NULL(obj, ERRNO_INVAL);
   RETURN_VAL_IF_NULL(value, ERRNO_INVAL);
@@ -948,6 +986,10 @@ Trailer *FixMessage_getTrailerRef(Message *obj) {
 const char *FixTrailer_getField(const Trailer *obj, int32_t tag) {
   RETURN_VAL_IF_NULL(obj, NULL);
   CATCH_OR_RETURN_NULL({ return obj->getField(tag).c_str(); });
+}
+
+int8_t FixTrailer_isFieldEqual(const Trailer *obj, int32_t tag, const char *value, uint64_t value_len) {
+  return FixFieldMap_isFieldEqual(obj, tag, value, value_len);
 }
 
 int8_t FixTrailer_setField(Trailer *obj, int32_t tag, const char *value) {
@@ -1041,6 +1083,10 @@ int32_t FixGroup_getDelim(const Group *obj) {
 const char *FixGroup_getField(const Group *obj, int32_t tag) {
   RETURN_VAL_IF_NULL(obj, NULL);
   CATCH_OR_RETURN_NULL({ return obj->getField(tag).c_str(); });
+}
+
+int8_t FixGroup_isFieldEqual(const Group *obj, int32_t tag, const char *value, uint64_t value_len) {
+  return FixFieldMap_isFieldEqual(obj, tag, value, value_len);
 }
 
 int8_t FixGroup_setField(Group *obj, int32_t tag, const char *value) {

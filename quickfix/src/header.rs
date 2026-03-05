@@ -3,7 +3,7 @@ use std::fmt;
 
 use quickfix_ffi::{
     FixHeader_addGroup, FixHeader_copy, FixHeader_copyGroup, FixHeader_delete, FixHeader_getField,
-    FixHeader_new, FixHeader_removeField, FixHeader_setField, FixHeader_t,
+    FixHeader_isFieldEqual, FixHeader_new, FixHeader_removeField, FixHeader_setField, FixHeader_t,
 };
 
 use crate::{
@@ -30,6 +30,12 @@ impl Header {
 impl FieldMap for Header {
     fn get_field(&self, tag: i32) -> Option<String> {
         unsafe { FixHeader_getField(self.0, tag) }.map(read_checked_cstr)
+    }
+
+    fn is_field_equal(&self, tag: i32, value: &str) -> bool {
+        unsafe {
+            FixHeader_isFieldEqual(self.0, tag, value.as_ptr().cast(), value.len() as u64) == 1
+        }
     }
 
     fn set_field<V: IntoFixValue>(&mut self, tag: i32, value: V) -> Result<(), QuickFixError> {

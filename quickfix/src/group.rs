@@ -2,8 +2,8 @@ use std::fmt;
 
 use quickfix_ffi::{
     FixGroup_addGroup, FixGroup_copy, FixGroup_copyGroup, FixGroup_delete, FixGroup_getDelim,
-    FixGroup_getField, FixGroup_getFieldId, FixGroup_new, FixGroup_removeField, FixGroup_setField,
-    FixGroup_t,
+    FixGroup_getField, FixGroup_getFieldId, FixGroup_isFieldEqual, FixGroup_new,
+    FixGroup_removeField, FixGroup_setField, FixGroup_t,
 };
 
 use crate::{
@@ -51,6 +51,12 @@ impl Group {
 impl FieldMap for Group {
     fn get_field(&self, tag: i32) -> Option<String> {
         unsafe { FixGroup_getField(self.0, tag) }.map(read_checked_cstr)
+    }
+
+    fn is_field_equal(&self, tag: i32, value: &str) -> bool {
+        unsafe {
+            FixGroup_isFieldEqual(self.0, tag, value.as_ptr().cast(), value.len() as u64) == 1
+        }
     }
 
     fn set_field<V: IntoFixValue>(&mut self, tag: i32, value: V) -> Result<(), QuickFixError> {

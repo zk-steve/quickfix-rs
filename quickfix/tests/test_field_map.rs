@@ -29,10 +29,14 @@ fn check_field_map<T: FieldMap>(mut item: T) {
     // Set and check
     item.set_field(FIELD_ID, "foo").unwrap();
     assert_eq!(item.get_field(FIELD_ID).as_deref(), Some("foo"));
+    assert!(item.is_field_equal(FIELD_ID, "foo"));
+    assert!(!item.is_field_equal(FIELD_ID, "bar"));
 
     // Update and set
     item.set_field(FIELD_ID, "bar").unwrap();
     assert_eq!(item.get_field(FIELD_ID).as_deref(), Some("bar"));
+    assert!(item.is_field_equal(FIELD_ID, "bar"));
+    assert!(!item.is_field_equal(FIELD_ID, "foo"));
 
     // Set with invalid value and check
     assert_eq!(
@@ -42,8 +46,10 @@ fn check_field_map<T: FieldMap>(mut item: T) {
         ))
     );
     assert_eq!(item.get_field(FIELD_ID).as_deref(), Some("bar"));
+    assert!(item.is_field_equal(FIELD_ID, "bar"));
 
     // Remove and check
     item.remove_field(FIELD_ID).unwrap();
     assert_eq!(item.get_field(FIELD_ID), None);
+    assert!(!item.is_field_equal(FIELD_ID, "bar"));
 }

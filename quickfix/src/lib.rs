@@ -250,6 +250,14 @@ pub trait FieldMap {
     /// Get field value from its tag number.
     fn get_field(&self, tag: i32) -> Option<String>;
 
+    /// Compare field value with an input string.
+    ///
+    /// Default implementation fetches and compares in Rust.
+    /// Specific implementations may override this with a faster FFI path.
+    fn is_field_equal(&self, tag: i32, value: &str) -> bool {
+        self.get_field(tag).as_deref() == Some(value)
+    }
+
     /// Set field value for a given tag number.
     fn set_field<V: IntoFixValue>(&mut self, tag: i32, value: V) -> Result<(), QuickFixError>;
 
