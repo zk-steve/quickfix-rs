@@ -17,6 +17,7 @@ include = [
     "/libquickfix/CMakeLists.txt",
     "/libquickfix/LICENSE",            # Used by build script
     "/quickfix-bind",
+    "/scripts",
     "/src",
     "/build.rs",
     "/CMakeLists.txt",
@@ -61,3 +62,4 @@ default = []
 build-with-ssl = []
 build-with-mysql = []
 build-with-postgres = []
+build-with-io-uring = []
