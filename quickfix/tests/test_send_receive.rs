@@ -17,8 +17,6 @@ where
     let settings_sender = setting_builder(ServerType::Sender, communication_port)?;
     let settings_receiver = setting_builder(ServerType::Receiver, communication_port)?;
 
-    let log_factory = LogFactory::try_new(&StdLogger::Stdout)?;
-
     let app_sender = Application::try_new(&sender)?;
     let app_receiver = Application::try_new(&receiver)?;
 
@@ -38,14 +36,12 @@ where
         &settings_sender,
         &app_sender,
         &message_store_factory_sender,
-        &log_factory,
         server_kind,
     )?;
     let mut socket_receiver = Acceptor::try_new(
         &settings_receiver,
         &app_receiver,
         &message_store_factory_receiver,
-        &log_factory,
         server_kind,
     )?;
 

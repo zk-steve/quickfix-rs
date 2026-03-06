@@ -78,14 +78,12 @@ impl ApplicationCallback for MyApplication {
 
 // Create FIX objects.
 let store_factory = MemoryMessageStoreFactory::new();
-let log_factory = LogFactory::try_new(&StdLogger::Stdout)?;
 let app = Application::try_new(&MyApplication)?;
 
 let mut acceptor = Acceptor::try_new(
     &settings,
     &app,
     &store_factory,
-    &log_factory,
     FixSocketServerKind::SingleThreaded,
 )?;
 
@@ -301,6 +299,10 @@ pub enum FixSocketServerKind {
 }
 
 impl FixSocketServerKind {
+    fn is_multi_threaded(self) -> bool {
+        !self.is_single_threaded()
+    }
+
     fn is_single_threaded(self) -> bool {
         match self {
             Self::SingleThreaded => true,

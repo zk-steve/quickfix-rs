@@ -9,61 +9,58 @@ use quickfix_ffi::{
 use crate::{
     utils::{ffi_code_to_bool, ffi_code_to_result},
     Application, ApplicationCallback, ConnectionHandler, FfiMessageStoreFactory,
-    FixSocketServerKind, LogCallback, LogFactory, QuickFixError, Session, SessionContainer,
-    SessionId, SessionSettings,
+    FixSocketServerKind, LogFactory, QuickFixError, Session, SessionContainer, SessionId,
+    SessionSettings, StdLogger,
 };
 
 /// Socket implementation of establishing connections handler.
 #[derive(Debug)]
-pub struct Initiator<'a, A, L, S>
+pub struct Initiator<'a, A, S>
 where
     A: ApplicationCallback,
     S: FfiMessageStoreFactory,
-    L: LogCallback,
 {
     inner: FixInitiator_t,
     phantom_application: PhantomData<&'a A>,
     phantom_message_store_factory: PhantomData<&'a S>,
-    phantom_log_factory: PhantomData<&'a L>,
+    _log_factory: LogFactory<'static, StdLogger>,
 }
 
-unsafe impl<'a, A, L, S> Send for Initiator<'a, A, L, S>
+unsafe impl<'a, A, S> Send for Initiator<'a, A, S>
 where
     A: ApplicationCallback,
     S: FfiMessageStoreFactory,
-    L: LogCallback,
 {
 }
 
-unsafe impl<'a, A, L, S> Sync for Initiator<'a, A, L, S>
+unsafe impl<'a, A, S> Sync for Initiator<'a, A, S>
 where
     A: ApplicationCallback,
     S: FfiMessageStoreFactory,
-    L: LogCallback,
 {
 }
 
-impl<'a, A, L, S> Initiator<'a, A, L, S>
+impl<'a, A, S> Initiator<'a, A, S>
 where
     A: ApplicationCallback,
     S: FfiMessageStoreFactory,
-    L: LogCallback,
 {
     /// Try create new struct from its mandatory components.
     pub fn try_new(
         settings: &SessionSettings,
         application: &'a Application<A>,
         store_factory: &'a S,
-        log_factory: &'a LogFactory<L>,
         server_mode: FixSocketServerKind,
     ) -> Result<Self, QuickFixError> {
+        let log_factory = LogFactory::try_new(&StdLogger::Stdout)?;
+
         match unsafe {
             FixInitiator_new(
                 application.0,
                 store_factory.as_ffi_ptr(),
                 settings.0,
                 log_factory.0,
-                server_mode.is_single_threaded() as i8,
+                server_mode.is_multi_threaded() as i8,
                 server_mode.is_ssl_enabled() as i8,
             )
         } {
@@ -71,18 +68,17 @@ where
                 inner,
                 phantom_application: PhantomData,
                 phantom_message_store_factory: PhantomData,
-                phantom_log_factory: PhantomData,
+                _log_factory: log_factory,
             }),
             None => Err(QuickFixError::from_last_error()),
         }
     }
 }
 
-impl<A, L, S> ConnectionHandler for Initiator<'_, A, L, S>
+impl<A, S> ConnectionHandler for Initiator<'_, A, S>
 where
     A: ApplicationCallback,
     S: FfiMessageStoreFactory,
-    L: LogCallback,
 {
     fn start(&mut self) -> Result<(), QuickFixError> {
         ffi_code_to_result(unsafe { FixInitiator_start(self.inner) })
@@ -109,11 +105,10 @@ where
     }
 }
 
-impl<A, L, S> SessionContainer for Initiator<'_, A, L, S>
+impl<A, S> SessionContainer for Initiator<'_, A, S>
 where
     A: ApplicationCallback,
     S: FfiMessageStoreFactory,
-    L: LogCallback,
 {
     fn session(&self, session_id: SessionId) -> Result<Session<'_>, QuickFixError> {
         unsafe {
@@ -129,11 +124,10 @@ where
     }
 }
 
-impl<A, L, S> Drop for Initiator<'_, A, L, S>
+impl<A, S> Drop for Initiator<'_, A, S>
 where
     A: ApplicationCallback,
     S: FfiMessageStoreFactory,
-    L: LogCallback,
 {
     fn drop(&mut self) {
         let _ = self.stop();

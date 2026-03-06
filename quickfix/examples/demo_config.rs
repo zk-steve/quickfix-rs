@@ -2,8 +2,7 @@ use std::io::{stdin, Read};
 
 use quickfix::{
     dictionary_item::*, Acceptor, Application, ApplicationCallback, ConnectionHandler, Dictionary,
-    FixSocketServerKind, LogFactory, MemoryMessageStoreFactory, QuickFixError, SessionId,
-    SessionSettings, StdLogger,
+    FixSocketServerKind, MemoryMessageStoreFactory, QuickFixError, SessionId, SessionSettings,
 };
 
 #[derive(Default)]
@@ -49,7 +48,6 @@ fn main() -> Result<(), QuickFixError> {
 
     println!(">> Creating resources");
     let store_factory = MemoryMessageStoreFactory::new();
-    let log_factory = LogFactory::try_new(&StdLogger::Stdout)?;
     let callbacks = MyApplication;
     let app = Application::try_new(&callbacks)?;
 
@@ -57,7 +55,6 @@ fn main() -> Result<(), QuickFixError> {
         &settings,
         &app,
         &store_factory,
-        &log_factory,
         FixSocketServerKind::SingleThreaded,
     )?;
 

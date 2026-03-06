@@ -2,6 +2,7 @@
 
 #include <cstring>
 #include <exception>
+#include <iostream>
 #include <limits>
 #include <utility>
 
@@ -357,21 +358,29 @@ public:
   void backup() override {}
 
   void onIncoming(const std::string &msg) override {
-    RETURN_IF_NULL(callbacks);
-    RETURN_IF_NULL(callbacks->onIncoming);
-    callbacks->onIncoming(data, sessionId, msg.c_str());
+    (void)msg;
   }
 
   void onOutgoing(const std::string &msg) override {
-    RETURN_IF_NULL(callbacks);
-    RETURN_IF_NULL(callbacks->onOutgoing);
-    callbacks->onOutgoing(data, sessionId, msg.c_str());
+    (void)msg;
   }
 
   void onEvent(const std::string &msg) override {
-    RETURN_IF_NULL(callbacks);
-    RETURN_IF_NULL(callbacks->onEvent);
-    callbacks->onEvent(data, sessionId, msg.c_str());
+    (void)data;
+    (void)callbacks;
+
+    std::string printableMsg(msg);
+    for (char &ch : printableMsg) {
+      if (ch == '\x01') {
+        ch = '|';
+      }
+    }
+
+    if (sessionId) {
+      std::cout << "FIX event: " << sessionId->toString() << ": " << printableMsg << '\n';
+    } else {
+      std::cout << "FIX event: <none>: " << printableMsg << '\n';
+    }
   }
 };
 

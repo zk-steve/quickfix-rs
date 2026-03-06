@@ -27,7 +27,6 @@ fn main() -> Result<(), QuickFixError> {
     println!(">> Creating resources");
     let settings = SessionSettings::try_from_path(config_file)?;
     let store_factory = FileMessageStoreFactory::try_new(&settings)?;
-    let log_factory = LogFactory::try_new(&StdLogger::Stdout)?;
     let callbacks = MyApplication;
     let app = Application::try_new(&callbacks)?;
 
@@ -35,7 +34,6 @@ fn main() -> Result<(), QuickFixError> {
         &settings,
         &app,
         &store_factory,
-        &log_factory,
         FixSocketServerKind::SingleThreaded,
     )?;
 

@@ -84,14 +84,12 @@ fn main() -> Result<(), QuickFixError> {
 
     let settings = SessionSettings::try_from_path(config_file)?;
     let store_factory = FileMessageStoreFactory::try_new(&settings)?;
-    let log_factory = LogFactory::try_new(&StdLogger::Stdout)?;
     let app = Application::try_new(&MyApplication)?;
 
     let mut acceptor = Acceptor::try_new(
         &settings,
         &app,
         &store_factory,
-        &log_factory,
         FixSocketServerKind::SingleThreaded,
     )?;
     acceptor.start()?;

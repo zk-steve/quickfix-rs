@@ -6,8 +6,7 @@ use std::{
 
 use quickfix::{
     send_to_target, send_to_target_by_ref_mut, Acceptor, Application, ConnectionHandler, FieldMap,
-    FixSocketServerKind, Initiator, LogFactory, MemoryMessageStoreFactory, NullLogger,
-    QuickFixError,
+    FixSocketServerKind, Initiator, MemoryMessageStoreFactory, QuickFixError,
 };
 use utils::{
     build_news, build_settings, find_available_port, NullFixApplication, ServerType, MSG_HEADLINE,
@@ -37,8 +36,6 @@ fn run_bench(
     let settings_sender = build_settings(ServerType::Sender, communication_port)?;
     let settings_receiver = build_settings(ServerType::Receiver, communication_port)?;
 
-    let log_factory = LogFactory::try_new(&NullLogger)?;
-
     let app_sender = Application::try_new(&NullFixApplication)?;
     let app_receiver = Application::try_new(&NullFixApplication)?;
 
@@ -49,14 +46,12 @@ fn run_bench(
         &settings_sender,
         &app_sender,
         &message_store_factory_sender,
-        &log_factory,
         server_kind,
     )?;
     let mut socket_receiver = Acceptor::try_new(
         &settings_receiver,
         &app_receiver,
         &message_store_factory_receiver,
-        &log_factory,
         server_kind,
     )?;
 

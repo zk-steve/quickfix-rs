@@ -32,14 +32,12 @@ fn test_handler() {
         let settings = build_settings(ConnectionType::Acceptor).unwrap();
         let app = Application::try_new(&MyApplication).unwrap();
         let message_store = MemoryMessageStoreFactory::new();
-        let logger = LogFactory::try_new(&StdLogger::Stdout).unwrap();
 
         check_connection_handler(
             Acceptor::try_new(
                 &settings,
                 &app,
                 &message_store,
-                &logger,
                 FixSocketServerKind::default(),
             )
             .unwrap(),
@@ -50,14 +48,12 @@ fn test_handler() {
         let settings = build_settings(ConnectionType::Initiator).unwrap();
         let app = Application::try_new(&MyApplication).unwrap();
         let message_store = MemoryMessageStoreFactory::new();
-        let logger = LogFactory::try_new(&StdLogger::Stdout).unwrap();
 
         check_connection_handler(
             Initiator::try_new(
                 &settings,
                 &app,
                 &message_store,
-                &logger,
                 FixSocketServerKind::default(),
             )
             .unwrap(),

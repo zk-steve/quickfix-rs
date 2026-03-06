@@ -142,14 +142,6 @@ impl StdLogger {
 }
 
 impl LogCallback for StdLogger {
-    fn on_incoming(&self, session_id: Option<&SessionId>, msg: &str) {
-        self.print(&format!("FIX incoming: {session_id:?}: {msg}"));
-    }
-
-    fn on_outgoing(&self, session_id: Option<&SessionId>, msg: &str) {
-        self.print(&format!("FIX outgoing: {session_id:?}: {msg}"));
-    }
-
     fn on_event(&self, session_id: Option<&SessionId>, msg: &str) {
         self.print(&format!("FIX event: {session_id:?}: {msg}"));
     }
@@ -162,16 +154,6 @@ pub struct RustLogger;
 
 #[cfg(feature = "log")]
 impl LogCallback for RustLogger {
-    fn on_incoming(&self, session_id: Option<&SessionId>, msg: &str) {
-        let msg = msg.replace('\x01', "|");
-        log::info!("FIX: Incoming: {session_id:?}: {msg}");
-    }
-
-    fn on_outgoing(&self, session_id: Option<&SessionId>, msg: &str) {
-        let msg = msg.replace('\x01', "|");
-        log::info!("FIX: Outcoming: {session_id:?}: {msg}");
-    }
-
     fn on_event(&self, session_id: Option<&SessionId>, msg: &str) {
         let msg = msg.replace('\x01', "|");
         log::info!("FIX: Event: {session_id:?}: {msg}");

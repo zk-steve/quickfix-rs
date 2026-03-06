@@ -2,7 +2,7 @@ use std::{env, process::exit};
 
 use quickfix::{
     Acceptor, Application, ConnectionHandler, FileMessageStoreFactory, FixSocketServerKind,
-    Initiator, LogFactory, QuickFixError, SessionSettings, StdLogger,
+    Initiator, QuickFixError, SessionSettings,
 };
 
 use crate::{command_exec::FixShell, fix_app::MyApplication};
@@ -24,7 +24,6 @@ fn main() -> Result<(), QuickFixError> {
     println!(">> Creating resources");
     let settings = SessionSettings::try_from_path(config_file)?;
     let store_factory = FileMessageStoreFactory::try_new(&settings)?;
-    let log_factory = LogFactory::try_new(&StdLogger::Stdout)?;
     let callbacks = MyApplication::new();
     let app = Application::try_new(&callbacks)?;
 
@@ -33,14 +32,12 @@ fn main() -> Result<(), QuickFixError> {
             &settings,
             &app,
             &store_factory,
-            &log_factory,
             FixSocketServerKind::SingleThreaded,
         )?),
         "acceptor" => server_loop(Acceptor::try_new(
             &settings,
             &app,
             &store_factory,
-            &log_factory,
             FixSocketServerKind::SingleThreaded,
         )?),
         _ => {

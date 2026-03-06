@@ -15,8 +15,6 @@ fn test_session_login_logout() -> Result<(), QuickFixError> {
     let settings_sender = build_settings(ServerType::Sender, communication_port)?;
     let settings_receiver = build_settings(ServerType::Receiver, communication_port)?;
 
-    let log_factory = LogFactory::try_new(&StdLogger::Stdout)?;
-
     let app_sender = Application::try_new(&sender)?;
     let app_receiver = Application::try_new(&receiver)?;
 
@@ -32,14 +30,12 @@ fn test_session_login_logout() -> Result<(), QuickFixError> {
         &settings_sender,
         &app_sender,
         &message_store_factory_sender,
-        &log_factory,
         FixSocketServerKind::default(),
     )?;
     let mut socket_receiver = Acceptor::try_new(
         &settings_receiver,
         &app_receiver,
         &message_store_factory_receiver,
-        &log_factory,
         FixSocketServerKind::default(),
     )?;
 
@@ -96,8 +92,6 @@ fn test_session_set_next_sender_target_msg_seq_num() -> Result<(), QuickFixError
     let settings_sender = build_settings(ServerType::Sender, communication_port)?;
     let settings_receiver = build_settings(ServerType::Receiver, communication_port)?;
 
-    let log_factory = LogFactory::try_new(&StdLogger::Stdout)?;
-
     let app_sender = Application::try_new(&sender)?;
     let app_receiver = Application::try_new(&receiver)?;
 
@@ -109,14 +103,12 @@ fn test_session_set_next_sender_target_msg_seq_num() -> Result<(), QuickFixError
         &settings_sender,
         &app_sender,
         &message_store_factory_sender,
-        &log_factory,
         FixSocketServerKind::default(),
     )?;
     let mut socket_receiver = Acceptor::try_new(
         &settings_receiver,
         &app_receiver,
         &message_store_factory_receiver,
-        &log_factory,
         FixSocketServerKind::default(),
     )?;
 
