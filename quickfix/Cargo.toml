@@ -23,6 +23,7 @@ default = ["log"]
 build-with-ssl = ["quickfix-ffi/build-with-ssl"]
 build-with-mysql = ["quickfix-ffi/build-with-mysql"]
 build-with-postgres = ["quickfix-ffi/build-with-postgres"]
+build-with-io-uring = ["quickfix-ffi/build-with-io-uring"]
 log = ["dep:log"]
 
 [[bench]]
